@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>My Orders – AgriFresh</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Inter, system-ui;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      margin-bottom: 1.5rem;
+    }
+    .order-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: .5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .order-card ul {
+      margin: .5rem 0;
+      padding-left: 1.2rem;
+    }
+    .order-card strong {
+      display: block;
+      margin-bottom: .25rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>My Orders</h1>
+  <div id="orders-container">Loading…</div>
+
+  <script>
+    // Check if user is logged in
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (!user) {
+      alert('Not logged in');
+      location.href = 'login.html';
+    }
+
+    // Load orders from localStorage
+    const allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+
+    // Filter orders belonging to this user
+    const orders = allOrders.filter(o => o.userId === user.id);
+
+    const container = document.getElementById('orders-container');
+
+    if (!orders.length) {
+      container.innerHTML = '<p>No orders yet. <a href="index.html">Shop now</a></p>';
+    } else {
+      container.innerHTML = orders.map(o => `
+        <div class="order-card">
+          <strong>Order #${o.id}</strong>
+          <span>${new Date(o.date).toLocaleString()} – Total ₱${o.total}</span>
+          <ul>
+            ${o.items.map(i => `<li>${i.qty} × ${i.name}</li>`).join('')}
+          </ul>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
