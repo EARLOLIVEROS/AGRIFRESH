@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up – Agri Fresh</title>
+
+  <!-- same global stylesheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ---------- identical 3-dot menu ---------- */
+    .dots-menu {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 9999;
+    }
+    .dots-menu input[type="checkbox"] { display: none; }
+    .dots-menu label {
+      display: block;
+      width: 2.5rem;
+      height: 2.5rem;
+      background: rgba(255,255,255,0.9);
+      border-radius: 50%;
+      cursor: pointer;
+      text-align: center;
+      line-height: 2.5rem;
+      font-size: 1.25rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,.15);
+      transition: background .2s;
+    }
+    .dots-menu label:hover { background: #ffffff; }
+    .dots-menu ul {
+      position: absolute;
+      top: 3rem;
+      right: 0;
+      list-style: none;
+      margin: 0;
+      padding: .5rem 0;
+      background: #ffffff;
+      border-radius: .5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,.15);
+      min-width: 120px;
+      opacity: 0;
+      transform: translateX(20px);
+      pointer-events: none;
+      transition: opacity .25s, transform .25s;
+    }
+    .dots-menu:hover ul,
+    .dots-menu input[type="checkbox"]:checked ~ ul {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .dots-menu li a {
+      display: block;
+      padding: .6rem 1rem;
+      color: #222;
+      text-decoration: none;
+      font-size: .9rem;
+    }
+    .dots-menu li a:hover { background: #f5f5f5; }
+
+    /* ---------- sign-up form tweaks ---------- */
+    body { background: #f7f7f7; }
+    .signup-wrapper {
+      max-width: 400px;
+      margin: 6vh auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: .75rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,.08);
+      text-align: center;
+    }
+    .signup-wrapper h1 { margin-bottom: 1.5rem; color: #2e7d32; }
+    .signup-wrapper label {
+      display: block;
+      margin-bottom: .5rem;
+      text-align: left;
+    }
+    .signup-wrapper input {
+      width: 100%;
+      padding: .75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: .5rem;
+      font-size: 1rem;
+    }
+    .signup-wrapper button {
+      width: 100%;
+      padding: .75rem;
+      background: #2e7d32;
+      color: #fff;
+      border: none;
+      border-radius: .5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .signup-wrapper button:hover { background: #1b5e20; }
+    .switch { margin-top: 1rem; font-size: .9rem; }
+    .switch a { color: #2e7d32; text-decoration: none; }
+
+    /* --- First + Last name row --- */
+    .name-row {
+      display: flex;
+      gap: 1rem;
+    }
+    .name-row .field {
+      flex: 1;
+    }
+    .name-row label {
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .name-row input {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 🔝 Header -->
+  <header>
+    <h1>Agri Fresh Market</h1>
+    <nav>
+      <a href="index.html">Home</a>
+    </nav>
+  </header>
+
+  <!-- 3-dot menu -->
+  <nav class="dots-menu">
+    <input type="checkbox" id="dots-toggle">
+    <label for="dots-toggle">⋮</label>
+    <ul>
+      <li><a href="login.html">Log in</a></li>
+      <li><a href="admin.html">Admin</a></li>
+    </ul>
+  </nav>
+
+  <main class="signup-wrapper">
+    <h1>Sign Up</h1>
+
+    <form id="signupForm">
+      <div class="name-row">
+        <div class="field">
+          <label>First Name
+            <input type="text" name="firstName" required />
+          </label>
+        </div>
+        <div class="field">
+          <label>Last Name
+            <input type="text" name="lastName" required />
+          </label>
+        </div>
+      </div>
+
+      <label>
+        Contact No.
+        <input type="tel" name="contact" required />
+      </label>
+
+      <label>
+        Email
+        <input type="email" name="email" required />
+      </label>
+
+      <label>
+        Password
+        <input type="password" name="password" required />
+      </label>
+
+      <button type="submit">Create Account</button>
+
+      <p class="switch">
+        Already have an account? <a href="login.html">Log in</a>
+      </p>
+    </form>
+  </main>
+
+  <footer>
+    <p style="text-align:center;padding:1.5rem 0;color:#666;">
+      &copy; 2025 AgriFresh Market – Freshness Delivered.
+    </p>
+  </footer>
+
+  <script>
+    /***********************
+     * REAL REGISTRATION
+     ***********************/
+    document.getElementById('signupForm').addEventListener('submit', e => {
+      e.preventDefault();
+
+      /* collect form data */
+      const form = e.target;
+      const firstName = form.firstName.value.trim();
+      const lastName  = form.lastName.value.trim();
+      const contact   = form.contact.value.trim();
+      const email     = form.email.value.trim().toLowerCase();
+      const password  = form.password.value;
+
+      /* simple validation */
+      if (!firstName || !lastName || !contact || !email || !password) {
+        alert('Please fill in all fields.');
+        return;
+      }
+
+      /* check duplicate email */
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      if (users.some(u => u.email === email)) {
+        alert('Email already registered. Try logging in instead.');
+        return;
+      }
+
+      /* create new user object */
+      const newUser = {
+        id: Date.now(),          // unique id
+        firstName,
+        lastName,
+        contact,
+        email,
+        password                // NOTE: in production, NEVER store plain-text passwords
+      };
+
+      /* save to localStorage */
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+
+      /* success -> go to login */
+      alert('Account created successfully!');
+      location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
