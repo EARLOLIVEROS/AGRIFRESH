@@ -1,12 +1,16 @@
+
 <?php
-$host = "localhost"; 
-$user = "root"; // your phpMyAdmin username
-$pass = "";     // your phpMyAdmin password
-$dbname = "agri_fresh";
+$HOSTNAME = 'localhost';
+$USERNAME = 'root';
+$PASSWORD = ''; 
+$DATABASE = 'agrifresh';
 
-$conn = new mysqli($host, $user, $pass, $dbname);
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+$con = mysqli_connect($HOSTNAME, $USERNAME, $PASSWORD, $DATABASE);
+
+if (!$con) {
+    die(json_encode(['error' => 'Database connection failed', 'details' => mysqli_connect_error()]));
 }
-?>
+
+mysqli_set_charset($con, "utf8mb4");
